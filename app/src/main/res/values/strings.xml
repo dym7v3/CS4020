@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Simon</string>
+    <string name="hard">Hard</string>
+    <string name="medium">Medium</string>
+    <string name="easy">Easy</string>
+    <string name="simon_s_a_computer_simon_has_a_brain_you_either_do_what_simon_says_or_else_go_down_the_drain">Simon\'s a computer, Simon has a brain, you either do what Simon says or else go down the drain</string>
+    <string name="select_difficulty">Select Difficulty:</string>
 </resources>
