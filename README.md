@@ -1,5 +1,5 @@
-# CS4020
-This is the introduction to Android App Development class.
+# CS4020 Project #1
+This is for the Android App Development class at UMSL.
 
 For this project we are developing an app called : Simon The Game. 
 It is based on the game Simon. It will have three screens. The Start page which allows the user to select the difficultly they want. 
