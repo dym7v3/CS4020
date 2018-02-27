@@ -4,27 +4,22 @@ import android.os.CountDownTimer
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_game.*
 
+var model : gameModel = gameModel(1)
+
 class Game : Activity() {
-    var difficultly : Int = 1
-    var model : gameModel = gameModel(1)
-    var current_Color : BUTTON_COLORS = BUTTON_COLORS.blue
-    var gameOver: Boolean =false
 
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-
         //Grabs the difficultly for the first screen. It is sent when the button is pressed.
-        difficultly = intent.getIntExtra("difficultly",1)
-        model = gameModel(difficultly)//Create the model to store the data.
+        model = gameModel(intent.getIntExtra("difficultly",1))//Create the model to store the data.
         model.high_score=intent.getIntExtra("High_Score",0)
         //Displays the high score which is saved in the data model.
         score.text = model.high_score.toString()
@@ -37,7 +32,7 @@ class Game : Activity() {
     //The game function. It will be called on create and then after wards by buttons.
     private fun game()
     {
-        if(gameOver) //When the game is over then it will start a new activity.
+        if(model.gameOver) //When the game is over then it will start a new activity.
         // Which will be taking it to the Results activity.
         {
             Toast.makeText(this@Game, "Game Over!", Toast.LENGTH_SHORT).show()
@@ -62,8 +57,8 @@ class Game : Activity() {
         {
             val animator = AnimatorInflater.loadAnimator(this, R.animator.fade)
             animator.startDelay = ((index+1) * 1000).toLong() //Sets the delay so they run in order.
-            current_Color=model.get_current_color_at_postion(index)
-            val button: Button = when (current_Color) //Tells which text to light up.
+            model.current_Color=model.get_current_color_at_postion(index)
+            val button: Button = when (model.current_Color) //Tells which text to light up.
             {
                 BUTTON_COLORS.green -> green_button
                 BUTTON_COLORS.yellow -> yellow_button
@@ -82,7 +77,7 @@ class Game : Activity() {
                     time.setText(""+ millisUntilFinished / 1000)
                 }
                 override fun onFinish() {
-                    gameOver=true
+                    model.gameOver=true
                 }
             }.start()
     }
@@ -107,7 +102,7 @@ class Game : Activity() {
                 else
                 {
 
-                    gameOver=true
+                    model.gameOver=true
                     game()
                 }
             }
@@ -131,7 +126,7 @@ class Game : Activity() {
                 }
                 else
                 {
-                    gameOver=true
+                    model.gameOver=true
                     game()
                 }
             }
@@ -154,7 +149,7 @@ class Game : Activity() {
                 }
                 else
                 {
-                    gameOver=true
+                    model.gameOver=true
                     game()
                 }
             }
@@ -176,7 +171,7 @@ class Game : Activity() {
                 }
                 else
                 {
-                    gameOver=true
+                    model.gameOver=true
                     game()
                 }
             }

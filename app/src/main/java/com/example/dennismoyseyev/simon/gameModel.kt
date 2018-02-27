@@ -18,7 +18,9 @@ class gameModel(val difficutly: Int){ //Primary constructor
     var high_score: Int = 0
     var current_pos: Int =0
     var my_score: Int =0
-
+    var current_Color : BUTTON_COLORS = BUTTON_COLORS.blue
+    var gameOver: Boolean =false
+    var difficultly: Int =1
 
 
     //The initiation block.
