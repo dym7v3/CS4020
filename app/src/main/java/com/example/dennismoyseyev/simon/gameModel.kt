@@ -17,23 +17,19 @@ class gameModel(val difficutly: Int){ //Primary constructor
     var size_of_vector: Int = 0
     var high_score: Int = 0
     var current_pos: Int =0
-    val mAnimation: Animation = AlphaAnimation(1f, 0f)
+    var my_score: Int =0
 
 
 
     //The initiation block.
     init {
         v.add(generate_random_color())
+        //v.add(generate_random_color()) //TODO eventually don't allow for the same color to be shown after each other.
         size_of_vector = 1
-        mAnimation.duration = (100/difficutly).toLong()
-        mAnimation.interpolator = LinearInterpolator()
-        mAnimation.repeatCount = (6/difficutly).toInt()
-        mAnimation.repeatMode = Animation.REVERSE
     }
 
     private fun generate_random_color(): BUTTON_COLORS {
         val num = ThreadLocalRandom.current().nextInt(0, 3 + 1)
-
         return when (num) {
             0 -> BUTTON_COLORS.blue
             1 -> BUTTON_COLORS.red
@@ -48,6 +44,26 @@ class gameModel(val difficutly: Int){ //Primary constructor
         return v[p]
     }
 
+    private fun add_one_to_pattern()
+    {
+        v.add(generate_random_color())
+        size_of_vector++
+    }
+
+    fun get_game_ready()
+    {
+        current_pos=0
+        add_one_to_pattern()
+    }
+    fun got_it_right()
+    {
+        current_pos++
+        my_score++
+        if(my_score>high_score)
+        {
+            high_score=my_score
+        }
+    }
 
 
 }
