@@ -1,15 +1,13 @@
 package com.example.dennismoyseyev.simon
 
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
+import android.os.CountDownTimer
+import com.example.dennismoyseyev.simon.R.id.time
+import java.util.*
 import java.util.concurrent.ThreadLocalRandom
-import java.util.Vector
 
 enum class BUTTON_COLORS {
     blue, red, green, yellow
 }
-
 
 //Constructor which will be run at the beginning on the program
 class gameModel(val difficutly: Int){ //Primary constructor
@@ -20,13 +18,13 @@ class gameModel(val difficutly: Int){ //Primary constructor
     var my_score: Int =0
     var current_Color : BUTTON_COLORS = BUTTON_COLORS.blue
     var gameOver: Boolean =false
-    var difficultly: Int =1
+    var mTimer: CountDownTimer? = null
+
 
 
     //The initiation block.
     init {
         v.add(generate_random_color())
-        //v.add(generate_random_color()) //TODO eventually don't allow for the same color to be shown after each other.
         size_of_vector = 1
     }
 
@@ -42,6 +40,8 @@ class gameModel(val difficutly: Int){ //Primary constructor
         }
     }
 
+
+
     internal fun get_current_color_at_postion(p: Int): BUTTON_COLORS {
         return v[p]
     }
@@ -56,6 +56,8 @@ class gameModel(val difficutly: Int){ //Primary constructor
     {
         current_pos=0
         add_one_to_pattern()
+        mTimer?.cancel()
+
     }
     fun got_it_right()
     {

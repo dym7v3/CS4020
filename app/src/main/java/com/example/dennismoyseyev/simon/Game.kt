@@ -1,9 +1,11 @@
 package com.example.dennismoyseyev.simon
+import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.os.CountDownTimer
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -35,17 +37,21 @@ class Game : Activity() {
         if(model.gameOver) //When the game is over then it will start a new activity.
         // Which will be taking it to the Results activity.
         {
-            Toast.makeText(this@Game, "Game Over!", Toast.LENGTH_SHORT).show()
+            //This will delay the time for the Game over message to display after telling the user which button they should have preseed.
+            Handler().postDelayed(Runnable {
+                Toast.makeText(this@Game, "Game Over!", Toast.LENGTH_SHORT).show()
+            }, 2100)
+            Toast.makeText(this@Game, "You should have pressed the : \'"+model.get_current_color_at_postion(model.current_pos) + "\' Button", Toast.LENGTH_SHORT).show()
+            model.mTimer?.cancel()
             val intent = Intent(this@Game, Results::class.java)
-            intent.putExtra("Score",model.my_score)
-            intent.putExtra("High_Score",model.high_score)
+            intent.putExtra("Score",model.my_score) //Sends the Score to the Results screen
+            intent.putExtra("High_Score",model.high_score) //Sends the High Score to the Results screen.
             startActivity(intent)
 
         }
         else //If it is not game over then it will display the sequence of buttons and play game.
         {
             sequenceTriggered()
-            //timer()
         }
     }
 
@@ -53,10 +59,26 @@ class Game : Activity() {
     //It is modified to and display all the buttons that are in the size of the vector.
      private fun sequenceTriggered()
     {
+        var timing: Long= 0
         for (index in 0 until model.size_of_vector)
         {
-            val animator = AnimatorInflater.loadAnimator(this, R.animator.fade)
-            animator.startDelay = ((index+1) * 1000).toLong() //Sets the delay so they run in order.
+            var animator: Animator
+
+            when {
+                model.difficutly == 1 -> {
+                    animator = AnimatorInflater.loadAnimator(this, R.animator.easy_animation)
+                    animator.startDelay = ((index + 1) * 750).toLong() //Sets the delay so they run in order.
+
+                }
+                model.difficutly==2 -> {
+                    animator = AnimatorInflater.loadAnimator(this, R.animator.medium_animation)
+                    animator.startDelay = ((index + 1) * 500).toLong() //Sets the delay so they run in order.
+                }
+                else -> {
+                    animator = AnimatorInflater.loadAnimator(this, R.animator.hard_animation)
+                    animator.startDelay = ((index + 1) * 350).toLong() //Sets the delay so they run in order.
+                }
+            }
             model.current_Color=model.get_current_color_at_postion(index)
             val button: Button = when (model.current_Color) //Tells which text to light up.
             {
@@ -68,18 +90,25 @@ class Game : Activity() {
             animator.setTarget(button)
             animator.start() //Starts the animator.
         }
+        when{
+            model.difficutly == 1 ->{timing=31000}
+            model.difficutly == 2 ->{timing=21000}
+            else->{timing=16000}
+        }
+       timer(timing)
+       model.mTimer?.start()
     }
-
-    private fun timer()
+    private fun timer(timing: Long)
     {
-            object: CountDownTimer(30000, 1000){
-                override fun onTick(millisUntilFinished: Long) {
-                    time.setText(""+ millisUntilFinished / 1000)
-                }
-                override fun onFinish() {
-                    model.gameOver=true
-                }
-            }.start()
+        model.mTimer = object: CountDownTimer(timing, 1000){
+            override fun onTick(millisUntilFinished: Long) {
+                time.text=(millisUntilFinished / 1000).toString()
+            }
+            override fun onFinish() {
+                model.gameOver=true
+                game()
+            }
+        }
     }
 
 
@@ -101,7 +130,6 @@ class Game : Activity() {
                 }
                 else
                 {
-
                     model.gameOver=true
                     game()
                 }
